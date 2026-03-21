@@ -26,7 +26,7 @@ const clearSession = () => localStorage.removeItem("todo-session");
 // AUTH SCREEN
 // ─────────────────────────────────────────────────────────────────────────────
 function AuthScreen({ onLogin, dark }) {
-  const [mode, setMode] = useState("login"); // "login" | "signup"
+  const [mode, setMode] = useState("login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -48,7 +48,6 @@ function AuthScreen({ onLogin, dark }) {
       setError("Email is required.");
       return;
     }
-
     if (mode === "signup") {
       if (!name.trim()) {
         setError("Name is required.");
@@ -93,7 +92,6 @@ function AuthScreen({ onLogin, dark }) {
         overflow: "hidden",
       }}
     >
-      {/* BG orbs */}
       <div
         style={{
           position: "fixed",
@@ -139,7 +137,6 @@ function AuthScreen({ onLogin, dark }) {
           maxWidth: 420,
         }}
       >
-        {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <div
             style={{
@@ -181,7 +178,6 @@ function AuthScreen({ onLogin, dark }) {
             Your tasks, your world 🌙
           </p>
         </div>
-
         <div
           style={{
             background: T.card,
@@ -194,7 +190,6 @@ function AuthScreen({ onLogin, dark }) {
               : "0 24px 80px rgba(99,102,241,0.13)",
           }}
         >
-          {/* Tab switcher */}
           <div
             style={{
               display: "flex",
@@ -234,7 +229,6 @@ function AuthScreen({ onLogin, dark }) {
               </button>
             ))}
           </div>
-
           <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
             {mode === "signup" && (
               <div>
@@ -305,7 +299,6 @@ function AuthScreen({ onLogin, dark }) {
                 }}
               />
             </div>
-
             {error && (
               <div
                 style={{
@@ -321,7 +314,6 @@ function AuthScreen({ onLogin, dark }) {
                 ⚠️ {error}
               </div>
             )}
-
             <button
               onClick={handle}
               style={{
@@ -342,7 +334,6 @@ function AuthScreen({ onLogin, dark }) {
               {mode === "login" ? "Log In →" : "Create Account →"}
             </button>
           </div>
-
           <p
             style={{
               textAlign: "center",
@@ -380,16 +371,13 @@ function ProfilePage({ user, todos, dark, onLogout, onClose }) {
     text: dark ? "#ede9fe" : "#1e1b4b",
     muted: dark ? "#9ca3af" : "#6b7280",
     bord: dark ? "rgba(139,92,246,0.15)" : "rgba(99,102,241,0.15)",
-    inp: dark ? "rgba(255,255,255,0.07)" : "#fff",
   };
-
   const initials = user.name
     .split(" ")
     .map((w) => w[0])
     .join("")
     .toUpperCase()
     .slice(0, 2);
-
   return (
     <div
       style={{
@@ -419,7 +407,6 @@ function ProfilePage({ user, todos, dark, onLogout, onClose }) {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Avatar */}
         <div style={{ textAlign: "center", marginBottom: 24 }}>
           <div
             style={{
@@ -453,8 +440,6 @@ function ProfilePage({ user, todos, dark, onLogout, onClose }) {
             {user.email}
           </div>
         </div>
-
-        {/* Stats */}
         <div
           style={{
             display: "grid",
@@ -518,8 +503,6 @@ function ProfilePage({ user, todos, dark, onLogout, onClose }) {
             </div>
           ))}
         </div>
-
-        {/* Buttons */}
         <div style={{ display: "flex", gap: 10 }}>
           <button
             onClick={onClose}
@@ -562,7 +545,7 @@ function ProfilePage({ user, todos, dark, onLogout, onClose }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// EXISTING HELPERS (unchanged)
+// HELPERS
 // ─────────────────────────────────────────────────────────────────────────────
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 const todayStr = () => new Date().toISOString().split("T")[0];
@@ -573,7 +556,6 @@ const nowTimeStr = () => {
 
 const CATEGORIES = ["All", "Personal", "Study", "Work"];
 const PRIORITIES = ["High", "Medium", "Low"];
-
 const CAT_META = {
   Personal: {
     icon: "🌸",
@@ -606,7 +588,6 @@ const PRI_META = {
   },
   Low: { color: "#10b981", bg: "#f0fdf4", border: "#a7f3d0", label: "🟢 Low" },
 };
-
 const DEFAULTS = [
   {
     id: "d1",
@@ -644,7 +625,7 @@ const DEFAULTS = [
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
-// VOICE ENGINE (unchanged)
+// VOICE ENGINE
 // ─────────────────────────────────────────────────────────────────────────────
 const MALE_VOICES = [
   "Google UK English Male",
@@ -678,28 +659,25 @@ function getBestVoice(type = "male") {
     const v = voices.find((v) => v.name === name);
     if (v) return v;
   }
-  if (type === "female") {
+  if (type === "female")
     return (
       voices.find(
         (v) =>
           v.lang.startsWith("en") &&
           (v.name.toLowerCase().includes("female") ||
             v.name.includes("Zira") ||
-            v.name.includes("Samantha") ||
-            v.name.includes("Karen")),
+            v.name.includes("Samantha")),
       ) ||
       voices.find((v) => v.lang.startsWith("en")) ||
       voices[0]
     );
-  }
   return (
     voices.find(
       (v) =>
         v.lang.startsWith("en") &&
         (v.name.toLowerCase().includes("male") ||
           v.name.includes("David") ||
-          v.name.includes("Daniel") ||
-          v.name.includes("Alex")),
+          v.name.includes("Daniel")),
     ) ||
     voices.find((v) => v.lang.startsWith("en")) ||
     voices[0]
@@ -733,7 +711,6 @@ function speakAlarm(taskText, voiceType = "male") {
   window.speechSynthesis.cancel();
   playBeep();
   setTimeout(() => {
-    const voice = getBestVoice(voiceType);
     const say = () => {
       const utt = new SpeechSynthesisUtterance(taskText);
       utt.voice = getBestVoice(voiceType);
@@ -752,12 +729,12 @@ function speakAlarm(taskText, voiceType = "male") {
       };
       window.speechSynthesis.speak(utt);
     };
-    voice ? say() : setTimeout(say, 500);
+    getBestVoice(voiceType) ? say() : setTimeout(say, 500);
   }, 900);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// CONFETTI (unchanged)
+// CONFETTI
 // ─────────────────────────────────────────────────────────────────────────────
 function Confetti({ active, onDone }) {
   const ref = useRef(null);
@@ -835,7 +812,7 @@ function Confetti({ active, onDone }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ALARM POPUP (unchanged)
+// ALARM POPUP
 // ─────────────────────────────────────────────────────────────────────────────
 function AlarmPopup({ alarms, onDismiss, onSnooze, dark }) {
   const [tick, setTick] = useState(0);
@@ -917,65 +894,6 @@ function AlarmPopup({ alarms, onDismiss, onSnooze, dark }) {
         >
           {todo.text}
         </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: 8,
-            marginBottom: 16,
-            flexWrap: "wrap",
-          }}
-        >
-          <span
-            style={{
-              fontSize: 13,
-              fontWeight: 700,
-              padding: "5px 14px",
-              borderRadius: 99,
-              color: "#fff",
-              background: cm
-                ? cm.gradient
-                : "linear-gradient(135deg,#6366f1,#818cf8)",
-            }}
-          >
-            {cm ? cm.icon : "✨"} {todo.category}
-          </span>
-          {todo.alarm && (
-            <span
-              style={{
-                fontSize: 13,
-                fontWeight: 700,
-                padding: "5px 14px",
-                borderRadius: 99,
-                color: "#7c3aed",
-                background: dark ? "rgba(124,58,237,0.15)" : "#ede9fe",
-                border: "1px solid #ddd6fe",
-              }}
-            >
-              🕐 {todo.alarm}
-            </span>
-          )}
-          <span
-            style={{
-              fontSize: 13,
-              fontWeight: 700,
-              padding: "5px 14px",
-              borderRadius: 99,
-              color: todo.voiceType === "female" ? "#ec4899" : "#3b82f6",
-              background:
-                todo.voiceType === "female"
-                  ? dark
-                    ? "rgba(236,72,153,0.15)"
-                    : "#fdf2f8"
-                  : dark
-                    ? "rgba(59,130,246,0.15)"
-                    : "#eff6ff",
-              border: `1px solid ${todo.voiceType === "female" ? "#fbcfe8" : "#bfdbfe"}`,
-            }}
-          >
-            {todo.voiceType === "female" ? "👩 Female" : "👨 Male"}
-          </span>
-        </div>
         <button
           onClick={() => speakAlarm(todo.text, todo.voiceType || "male")}
           style={{
@@ -1035,7 +953,7 @@ function AlarmPopup({ alarms, onDismiss, onSnooze, dark }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// EDIT MODAL (unchanged)
+// EDIT MODAL
 // ─────────────────────────────────────────────────────────────────────────────
 function EditModal({ todo, onSave, onClose, dark }) {
   const [text, setText] = useState(todo.text);
@@ -1044,7 +962,6 @@ function EditModal({ todo, onSave, onClose, dark }) {
   const [due, setDue] = useState(todo.due || "");
   const [alarm, setAlarm] = useState(todo.alarm || "");
   const [voiceType, setVoiceType] = useState(todo.voiceType || "male");
-
   const T = {
     bg: dark ? "#13131f" : "#fff",
     text: dark ? "#f1f0fb" : "#1e1b4b",
@@ -1053,7 +970,6 @@ function EditModal({ todo, onSave, onClose, dark }) {
     inp: dark ? "rgba(255,255,255,0.07)" : "#f9f8ff",
     sub: "#7c3aed",
   };
-
   return (
     <div
       style={{
@@ -1101,7 +1017,6 @@ function EditModal({ todo, onSave, onClose, dark }) {
               fontSize: 20,
               cursor: "pointer",
               color: T.muted,
-              lineHeight: 1,
             }}
           >
             ✕
@@ -1296,7 +1211,6 @@ function EditModal({ todo, onSave, onClose, dark }) {
                 label: "Male Voice",
                 color: "#3b82f6",
                 bg: dark ? "rgba(59,130,246,0.15)" : "#eff6ff",
-                bord: "#bfdbfe",
               },
               {
                 val: "female",
@@ -1304,7 +1218,6 @@ function EditModal({ todo, onSave, onClose, dark }) {
                 label: "Female Voice",
                 color: "#ec4899",
                 bg: dark ? "rgba(236,72,153,0.15)" : "#fdf2f8",
-                bord: "#fbcfe8",
               },
             ].map((v) => (
               <button
@@ -1335,27 +1248,6 @@ function EditModal({ todo, onSave, onClose, dark }) {
                 >
                   {v.label}
                 </div>
-                {voiceType === v.val && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      speakAlarm(text || "Test", v.val);
-                    }}
-                    style={{
-                      marginTop: 6,
-                      padding: "4px 10px",
-                      borderRadius: 8,
-                      border: "none",
-                      background: v.color,
-                      color: "#fff",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      cursor: "pointer",
-                    }}
-                  >
-                    🔊 Test
-                  </button>
-                )}
               </button>
             ))}
           </div>
@@ -1410,7 +1302,1915 @@ function EditModal({ todo, onSave, onClose, dark }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// STUDY TRACKER COMPONENT
+// ★ NEW: POMODORO TIMER
+// ─────────────────────────────────────────────────────────────────────────────
+function PomodoroTimer({ todos, dark }) {
+  const WORK_MIN = 25,
+    BREAK_MIN = 5,
+    LONG_BREAK_MIN = 15;
+  const [phase, setPhase] = useState("work"); // work | break | longBreak
+  const [seconds, setSeconds] = useState(WORK_MIN * 60);
+  const [running, setRunning] = useState(false);
+  const [session, setSession] = useState(1);
+  const [linkedTask, setLinkedTask] = useState("");
+  const [completedSessions, setCompletedSessions] = useState(0);
+  const intervalRef = useRef(null);
+
+  const T = {
+    card: dark ? "rgba(255,255,255,0.045)" : "rgba(255,255,255,0.9)",
+    text: dark ? "#ede9fe" : "#1e1b4b",
+    muted: dark ? "#9ca3af" : "#6b7280",
+    bord: dark ? "rgba(139,92,246,0.15)" : "rgba(99,102,241,0.15)",
+    inp: dark ? "rgba(255,255,255,0.07)" : "#fff",
+    shadow: dark
+      ? "0 12px 40px rgba(0,0,0,0.5)"
+      : "0 12px 40px rgba(99,102,241,0.12)",
+  };
+
+  const phaseConfig = {
+    work: {
+      label: "Focus Time",
+      color: "#6366f1",
+      bg: dark ? "rgba(99,102,241,0.15)" : "#eef2ff",
+      emoji: "🎯",
+      duration: WORK_MIN * 60,
+    },
+    break: {
+      label: "Short Break",
+      color: "#10b981",
+      bg: dark ? "rgba(16,185,129,0.15)" : "#ecfdf5",
+      emoji: "☕",
+      duration: BREAK_MIN * 60,
+    },
+    longBreak: {
+      label: "Long Break",
+      color: "#f59e0b",
+      bg: dark ? "rgba(245,158,11,0.15)" : "#fefce8",
+      emoji: "🌴",
+      duration: LONG_BREAK_MIN * 60,
+    },
+  };
+
+  const pc = phaseConfig[phase];
+  const totalSecs = pc.duration;
+  const progress = ((totalSecs - seconds) / totalSecs) * 100;
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+
+  const switchPhase = useCallback((newPhase) => {
+    setRunning(false);
+    setPhase(newPhase);
+    setSeconds(phaseConfig[newPhase].duration);
+  }, []);
+
+  useEffect(() => {
+    if (running) {
+      intervalRef.current = setInterval(() => {
+        setSeconds((s) => {
+          if (s <= 1) {
+            clearInterval(intervalRef.current);
+            setRunning(false);
+            playBeep();
+            if (phase === "work") {
+              const newCompleted = completedSessions + 1;
+              setCompletedSessions(newCompleted);
+              setSession((prev) => prev + 1);
+              if (newCompleted % 4 === 0) switchPhase("longBreak");
+              else switchPhase("break");
+            } else {
+              switchPhase("work");
+            }
+            return 0;
+          }
+          return s - 1;
+        });
+      }, 1000);
+    } else {
+      clearInterval(intervalRef.current);
+    }
+    return () => clearInterval(intervalRef.current);
+  }, [running, phase, completedSessions, switchPhase]);
+
+  const reset = () => {
+    setRunning(false);
+    setSeconds(pc.duration);
+  };
+  const circumference = 2 * Math.PI * 54;
+  const strokeDash = circumference - (progress / 100) * circumference;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      {/* Main timer card */}
+      <div
+        style={{
+          background: T.card,
+          backdropFilter: "blur(20px)",
+          borderRadius: 28,
+          border: `1.5px solid ${pc.color}44`,
+          padding: 28,
+          boxShadow: T.shadow,
+          textAlign: "center",
+        }}
+      >
+        <div
+          style={{
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: 4,
+            textTransform: "uppercase",
+            color: pc.color,
+            marginBottom: 8,
+          }}
+        >
+          {pc.emoji} {pc.label} — Session #{session}
+        </div>
+
+        {/* Circular progress */}
+        <div
+          style={{
+            position: "relative",
+            width: 160,
+            height: 160,
+            margin: "0 auto 20px",
+          }}
+        >
+          <svg width="160" height="160" style={{ transform: "rotate(-90deg)" }}>
+            <circle
+              cx="80"
+              cy="80"
+              r="54"
+              fill="none"
+              stroke={dark ? "rgba(255,255,255,0.08)" : "#e0e7ff"}
+              strokeWidth="10"
+            />
+            <circle
+              cx="80"
+              cy="80"
+              r="54"
+              fill="none"
+              stroke={pc.color}
+              strokeWidth="10"
+              strokeDasharray={circumference}
+              strokeDashoffset={strokeDash}
+              strokeLinecap="round"
+              style={{ transition: "stroke-dashoffset 1s linear" }}
+            />
+          </svg>
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                fontSize: 38,
+                fontWeight: 900,
+                color: T.text,
+                letterSpacing: "-2px",
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              {String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}
+            </div>
+          </div>
+        </div>
+
+        {/* Phase dots */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 6,
+            marginBottom: 20,
+          }}
+        >
+          {[1, 2, 3, 4].map((i) => (
+            <div
+              key={i}
+              style={{
+                width: 10,
+                height: 10,
+                borderRadius: "50%",
+                background:
+                  completedSessions % 4 >= i
+                    ? pc.color
+                    : dark
+                      ? "rgba(255,255,255,0.1)"
+                      : "#e0e7ff",
+                transition: "background 0.3s",
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Controls */}
+        <div
+          style={{
+            display: "flex",
+            gap: 10,
+            justifyContent: "center",
+            marginBottom: 16,
+          }}
+        >
+          <button
+            onClick={reset}
+            style={{
+              width: 48,
+              height: 48,
+              borderRadius: 14,
+              border: `1px solid ${T.bord}`,
+              background: dark ? "rgba(255,255,255,0.05)" : "#f5f3ff",
+              color: T.muted,
+              fontSize: 18,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            ↺
+          </button>
+          <button
+            onClick={() => setRunning((r) => !r)}
+            style={{
+              height: 48,
+              padding: "0 32px",
+              borderRadius: 14,
+              border: "none",
+              background: running
+                ? "linear-gradient(135deg,#f43f5e,#ec4899)"
+                : `linear-gradient(135deg,${pc.color},${pc.color}cc)`,
+              color: "#fff",
+              fontSize: 15,
+              fontWeight: 800,
+              cursor: "pointer",
+              boxShadow: `0 6px 20px ${pc.color}44`,
+              minWidth: 120,
+            }}
+          >
+            {running ? "⏸ Pause" : "▶ Start"}
+          </button>
+          <button
+            onClick={() => switchPhase(phase === "work" ? "break" : "work")}
+            style={{
+              width: 48,
+              height: 48,
+              borderRadius: 14,
+              border: `1px solid ${T.bord}`,
+              background: dark ? "rgba(255,255,255,0.05)" : "#f5f3ff",
+              color: T.muted,
+              fontSize: 16,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            ⏭
+          </button>
+        </div>
+
+        {/* Phase switcher */}
+        <div style={{ display: "flex", gap: 6, justifyContent: "center" }}>
+          {Object.entries(phaseConfig).map(([key, cfg]) => (
+            <button
+              key={key}
+              onClick={() => switchPhase(key)}
+              style={{
+                padding: "6px 14px",
+                borderRadius: 10,
+                border: `1.5px solid ${phase === key ? cfg.color : T.bord}`,
+                background: phase === key ? cfg.bg : "transparent",
+                color: phase === key ? cfg.color : T.muted,
+                fontSize: 11,
+                fontWeight: 700,
+                cursor: "pointer",
+                transition: "all 0.2s",
+              }}
+            >
+              {cfg.emoji} {cfg.label.split(" ")[0]}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Link to task */}
+      <div
+        style={{
+          background: T.card,
+          backdropFilter: "blur(20px)",
+          borderRadius: 20,
+          border: `1px solid ${T.bord}`,
+          padding: 18,
+          boxShadow: T.shadow,
+        }}
+      >
+        <div
+          style={{
+            fontSize: 12,
+            fontWeight: 700,
+            color: "#7c3aed",
+            marginBottom: 8,
+            letterSpacing: 1,
+            textTransform: "uppercase",
+          }}
+        >
+          🔗 Working On
+        </div>
+        <select
+          value={linkedTask}
+          onChange={(e) => setLinkedTask(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "10px 14px",
+            borderRadius: 12,
+            border: `1.5px solid ${T.bord}`,
+            background: T.inp,
+            color: T.text,
+            fontSize: 13,
+            fontWeight: 600,
+            outline: "none",
+            fontFamily: "inherit",
+          }}
+        >
+          <option value="">— Select a task —</option>
+          {todos
+            .filter((t) => !t.done)
+            .map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.text}
+              </option>
+            ))}
+        </select>
+        {linkedTask && (
+          <div
+            style={{
+              marginTop: 10,
+              padding: "10px 14px",
+              borderRadius: 12,
+              background: dark ? "rgba(99,102,241,0.1)" : "#eef2ff",
+              fontSize: 13,
+              color: "#6366f1",
+              fontWeight: 600,
+            }}
+          >
+            🎯 Focusing on: {todos.find((t) => t.id === linkedTask)?.text}
+          </div>
+        )}
+      </div>
+
+      {/* Stats */}
+      <div
+        style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}
+      >
+        {[
+          { n: completedSessions, l: "Sessions", c: "#6366f1", e: "🍅" },
+          {
+            n: Math.round(completedSessions * WORK_MIN),
+            l: "Minutes",
+            c: "#10b981",
+            e: "⏱️",
+          },
+          {
+            n: Math.floor(completedSessions / 4),
+            l: "Cycles",
+            c: "#f59e0b",
+            e: "🔄",
+          },
+        ].map(({ n, l, c, e }) => (
+          <div
+            key={l}
+            style={{
+              background: T.card,
+              backdropFilter: "blur(10px)",
+              borderRadius: 16,
+              padding: "14px 8px",
+              textAlign: "center",
+              border: `1px solid ${c}22`,
+              boxShadow: T.shadow,
+            }}
+          >
+            <div style={{ fontSize: 20, marginBottom: 4 }}>{e}</div>
+            <div
+              style={{ fontSize: 24, fontWeight: 900, color: c, lineHeight: 1 }}
+            >
+              {n}
+            </div>
+            <div
+              style={{
+                fontSize: 10,
+                color: T.muted,
+                marginTop: 4,
+                fontWeight: 600,
+                textTransform: "uppercase",
+                letterSpacing: 0.5,
+              }}
+            >
+              {l}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ★ NEW: HABIT TRACKER
+// ─────────────────────────────────────────────────────────────────────────────
+function HabitTracker({ habits, setHabits, dark }) {
+  const [showAdd, setShowAdd] = useState(false);
+  const [habitName, setHabitName] = useState("");
+  const [habitEmoji, setHabitEmoji] = useState("⭐");
+
+  const T = {
+    card: dark ? "rgba(255,255,255,0.045)" : "rgba(255,255,255,0.9)",
+    glass: dark ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.75)",
+    text: dark ? "#ede9fe" : "#1e1b4b",
+    muted: dark ? "#9ca3af" : "#6b7280",
+    bord: dark ? "rgba(139,92,246,0.15)" : "rgba(99,102,241,0.15)",
+    inp: dark ? "rgba(255,255,255,0.07)" : "#fff",
+    shadow: dark
+      ? "0 12px 40px rgba(0,0,0,0.5)"
+      : "0 12px 40px rgba(99,102,241,0.12)",
+  };
+
+  const EMOJIS = [
+    "⭐",
+    "💪",
+    "📖",
+    "🏃",
+    "💧",
+    "🧘",
+    "🥗",
+    "😴",
+    "🎯",
+    "✍️",
+    "🎵",
+    "🌿",
+  ];
+
+  const getLast30Days = () => {
+    const days = [];
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      days.push(d.toISOString().split("T")[0]);
+    }
+    return days;
+  };
+
+  const getStreak = (habit) => {
+    let streak = 0;
+    const today = todayStr();
+    let checkDay = new Date();
+    while (true) {
+      const dayStr = checkDay.toISOString().split("T")[0];
+      if (habit.completedDays.includes(dayStr)) {
+        streak++;
+        checkDay.setDate(checkDay.getDate() - 1);
+      } else if (dayStr === today) {
+        checkDay.setDate(checkDay.getDate() - 1);
+      } else break;
+    }
+    return streak;
+  };
+
+  const toggleDay = (habitId, day) => {
+    setHabits((prev) =>
+      prev.map((h) => {
+        if (h.id !== habitId) return h;
+        const has = h.completedDays.includes(day);
+        return {
+          ...h,
+          completedDays: has
+            ? h.completedDays.filter((d) => d !== day)
+            : [...h.completedDays, day],
+        };
+      }),
+    );
+  };
+
+  const addHabit = () => {
+    if (!habitName.trim()) return;
+    setHabits((prev) => [
+      ...prev,
+      {
+        id: uid(),
+        name: habitName.trim(),
+        emoji: habitEmoji,
+        completedDays: [],
+        createdAt: todayStr(),
+      },
+    ]);
+    setHabitName("");
+    setHabitEmoji("⭐");
+    setShowAdd(false);
+  };
+
+  const deleteHabit = (id) =>
+    setHabits((prev) => prev.filter((h) => h.id !== id));
+
+  const last30 = getLast30Days();
+  const today = todayStr();
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      {/* Header stats */}
+      {habits.length > 0 && (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            gap: 10,
+          }}
+        >
+          {[
+            { n: habits.length, l: "Habits", c: "#6366f1", e: "📋" },
+            {
+              n: habits.filter((h) => h.completedDays.includes(today)).length,
+              l: "Done Today",
+              c: "#10b981",
+              e: "✅",
+            },
+            {
+              n: Math.max(...habits.map((h) => getStreak(h)), 0),
+              l: "Best Streak",
+              c: "#f59e0b",
+              e: "🔥",
+            },
+          ].map(({ n, l, c, e }) => (
+            <div
+              key={l}
+              style={{
+                background: T.card,
+                backdropFilter: "blur(20px)",
+                borderRadius: 18,
+                padding: "16px 10px",
+                textAlign: "center",
+                border: `1px solid ${c}22`,
+                boxShadow: T.shadow,
+              }}
+            >
+              <div style={{ fontSize: 20, marginBottom: 6 }}>{e}</div>
+              <div
+                style={{
+                  fontSize: 26,
+                  fontWeight: 900,
+                  color: c,
+                  lineHeight: 1,
+                }}
+              >
+                {n}
+              </div>
+              <div
+                style={{
+                  fontSize: 10,
+                  color: T.muted,
+                  marginTop: 5,
+                  fontWeight: 600,
+                  textTransform: "uppercase",
+                  letterSpacing: 0.5,
+                }}
+              >
+                {l}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Add habit */}
+      <div
+        style={{
+          background: T.card,
+          backdropFilter: "blur(20px)",
+          borderRadius: 24,
+          border: `1.5px solid ${showAdd ? "#7c3aed" : T.bord}`,
+          overflow: "hidden",
+          boxShadow: T.shadow,
+          transition: "all 0.3s",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            padding: "14px 18px",
+            cursor: "pointer",
+          }}
+          onClick={() => setShowAdd((s) => !s)}
+        >
+          <div
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 12,
+              flexShrink: 0,
+              background: "linear-gradient(135deg,#6366f1,#a855f7)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 20,
+              color: "#fff",
+              fontWeight: 700,
+              boxShadow: "0 4px 14px rgba(99,102,241,0.4)",
+            }}
+          >
+            {showAdd ? "−" : "+"}
+          </div>
+          <span style={{ fontSize: 16, color: T.text, fontWeight: 500 }}>
+            Add a new habit
+          </span>
+        </div>
+        {showAdd && (
+          <div
+            style={{
+              padding: "4px 18px 18px",
+              borderTop: `1px solid ${T.bord}`,
+            }}
+          >
+            <div style={{ marginTop: 14, marginBottom: 12 }}>
+              <div
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  color: "#7c3aed",
+                  marginBottom: 8,
+                  letterSpacing: 1,
+                  textTransform: "uppercase",
+                }}
+              >
+                Pick an Emoji
+              </div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                {EMOJIS.map((e) => (
+                  <button
+                    key={e}
+                    onClick={() => setHabitEmoji(e)}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 10,
+                      border: `2px solid ${habitEmoji === e ? "#7c3aed" : T.bord}`,
+                      background:
+                        habitEmoji === e
+                          ? dark
+                            ? "rgba(124,58,237,0.2)"
+                            : "#ede9fe"
+                          : "transparent",
+                      fontSize: 20,
+                      cursor: "pointer",
+                    }}
+                  >
+                    {e}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div
+              style={{
+                fontSize: 11,
+                fontWeight: 700,
+                color: "#7c3aed",
+                marginBottom: 6,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+              }}
+            >
+              Habit Name
+            </div>
+            <input
+              value={habitName}
+              onChange={(e) => setHabitName(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && addHabit()}
+              placeholder="e.g. Drink 8 glasses of water"
+              style={{
+                width: "100%",
+                padding: "11px 14px",
+                borderRadius: 12,
+                border: `1.5px solid ${T.bord}`,
+                background: T.inp,
+                color: T.text,
+                fontSize: 14,
+                fontWeight: 600,
+                outline: "none",
+                fontFamily: "inherit",
+                boxSizing: "border-box",
+                marginBottom: 12,
+              }}
+            />
+            <button
+              onClick={addHabit}
+              style={{
+                width: "100%",
+                padding: "13px",
+                borderRadius: 14,
+                border: "none",
+                background: "linear-gradient(135deg,#6366f1,#a855f7)",
+                color: "#fff",
+                fontSize: 14,
+                fontWeight: 800,
+                cursor: "pointer",
+                boxShadow: "0 6px 20px rgba(99,102,241,0.35)",
+              }}
+            >
+              ✨ Create Habit
+            </button>
+          </div>
+        )}
+      </div>
+
+      {habits.length === 0 && (
+        <div
+          style={{
+            textAlign: "center",
+            padding: "56px 24px",
+            background: T.glass,
+            backdropFilter: "blur(20px)",
+            borderRadius: 24,
+            border: `1px solid ${T.bord}`,
+          }}
+        >
+          <div style={{ fontSize: 52, marginBottom: 14 }}>🌱</div>
+          <div
+            style={{
+              fontSize: 18,
+              fontWeight: 700,
+              color: T.text,
+              marginBottom: 8,
+            }}
+          >
+            No habits yet!
+          </div>
+          <div style={{ fontSize: 13, color: T.muted }}>
+            Build positive routines, one day at a time
+          </div>
+        </div>
+      )}
+
+      {/* Habit list */}
+      {habits.map((habit) => {
+        const streak = getStreak(habit);
+        const doneToday = habit.completedDays.includes(today);
+        const completion30 = last30.filter((d) =>
+          habit.completedDays.includes(d),
+        ).length;
+        const completionPct = Math.round((completion30 / 30) * 100);
+
+        return (
+          <div
+            key={habit.id}
+            style={{
+              background: doneToday
+                ? dark
+                  ? "rgba(16,185,129,0.08)"
+                  : "rgba(16,185,129,0.05)"
+                : T.card,
+              backdropFilter: "blur(20px)",
+              borderRadius: 22,
+              border: `1.5px solid ${doneToday ? "#10b981" : T.bord}`,
+              padding: 18,
+              boxShadow: T.shadow,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                marginBottom: 14,
+              }}
+            >
+              <div
+                style={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 14,
+                  background: doneToday
+                    ? "linear-gradient(135deg,#10b981,#6366f1)"
+                    : dark
+                      ? "rgba(255,255,255,0.08)"
+                      : "#f5f3ff",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 22,
+                  flexShrink: 0,
+                  boxShadow: doneToday
+                    ? "0 4px 14px rgba(16,185,129,0.3)"
+                    : "none",
+                  transition: "all 0.3s",
+                }}
+              >
+                {habit.emoji}
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 16, fontWeight: 700, color: T.text }}>
+                  {habit.name}
+                </div>
+                <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
+                  {streak > 0 && (
+                    <span
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 700,
+                        color: "#f59e0b",
+                      }}
+                    >
+                      🔥 {streak} day streak
+                    </span>
+                  )}
+                  <span
+                    style={{ fontSize: 12, color: T.muted, fontWeight: 600 }}
+                  >
+                    {completionPct}% last 30d
+                  </span>
+                </div>
+              </div>
+              <button
+                onClick={() => toggleDay(habit.id, today)}
+                style={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 14,
+                  border: `2px solid ${doneToday ? "#10b981" : T.bord}`,
+                  background: doneToday
+                    ? "linear-gradient(135deg,#10b981,#6366f1)"
+                    : "transparent",
+                  color: doneToday ? "#fff" : T.muted,
+                  fontSize: 20,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "all 0.2s",
+                  flexShrink: 0,
+                  boxShadow: doneToday
+                    ? "0 4px 14px rgba(16,185,129,0.35)"
+                    : "none",
+                }}
+              >
+                {doneToday ? "✓" : "○"}
+              </button>
+              <button
+                onClick={() => deleteHabit(habit.id)}
+                style={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: 10,
+                  border: "1.5px solid #fecdd3",
+                  background: dark ? "rgba(244,63,94,0.1)" : "#fff1f2",
+                  cursor: "pointer",
+                  fontSize: 14,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "#f43f5e",
+                  flexShrink: 0,
+                }}
+              >
+                🗑️
+              </button>
+            </div>
+
+            {/* Heatmap - last 30 days */}
+            <div
+              style={{
+                fontSize: 10,
+                fontWeight: 700,
+                color: T.muted,
+                marginBottom: 6,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+              }}
+            >
+              Last 30 Days
+            </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(10, 1fr)",
+                gap: 4,
+              }}
+            >
+              {last30.map((day) => {
+                const done = habit.completedDays.includes(day);
+                const isToday = day === today;
+                return (
+                  <div
+                    key={day}
+                    onClick={() => toggleDay(habit.id, day)}
+                    title={day}
+                    style={{
+                      height: 20,
+                      borderRadius: 5,
+                      background: done
+                        ? dark
+                          ? "rgba(99,102,241,0.8)"
+                          : "#6366f1"
+                        : dark
+                          ? "rgba(255,255,255,0.06)"
+                          : "#e0e7ff",
+                      cursor: "pointer",
+                      border: isToday
+                        ? "2px solid #ec4899"
+                        : "1.5px solid transparent",
+                      transition: "all 0.15s",
+                      transform: "scale(1)",
+                      opacity: done ? 1 : 0.5,
+                    }}
+                  />
+                );
+              })}
+            </div>
+
+            {/* Progress bar */}
+            <div
+              style={{
+                marginTop: 10,
+                height: 6,
+                background: dark ? "rgba(255,255,255,0.06)" : "#e0e7ff",
+                borderRadius: 99,
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  height: "100%",
+                  width: `${completionPct}%`,
+                  background: "linear-gradient(90deg,#6366f1,#10b981)",
+                  borderRadius: 99,
+                  transition: "width 0.5s ease",
+                }}
+              />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ★ NEW: TASK ANALYTICS DASHBOARD
+// ─────────────────────────────────────────────────────────────────────────────
+function AnalyticsDashboard({ todos, dark }) {
+  const T = {
+    card: dark ? "rgba(255,255,255,0.045)" : "rgba(255,255,255,0.9)",
+    text: dark ? "#ede9fe" : "#1e1b4b",
+    muted: dark ? "#9ca3af" : "#6b7280",
+    bord: dark ? "rgba(139,92,246,0.15)" : "rgba(99,102,241,0.15)",
+    shadow: dark
+      ? "0 12px 40px rgba(0,0,0,0.5)"
+      : "0 12px 40px rgba(99,102,241,0.12)",
+  };
+
+  // Category breakdown
+  const catData = ["Personal", "Study", "Work"].map((cat) => {
+    const catTodos = todos.filter((t) => t.category === cat);
+    const done = catTodos.filter((t) => t.done).length;
+    return {
+      cat,
+      total: catTodos.length,
+      done,
+      pct: catTodos.length ? Math.round((done / catTodos.length) * 100) : 0,
+    };
+  });
+
+  // Priority breakdown
+  const priData = ["High", "Medium", "Low"].map((pri) => {
+    const priTodos = todos.filter((t) => t.priority === pri);
+    const done = priTodos.filter((t) => t.done).length;
+    return { pri, total: priTodos.length, done };
+  });
+
+  // Completion rate over last 7 days (simulated from due dates)
+  const getLast7Days = () => {
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const str = d.toISOString().split("T")[0];
+      const dayName = d.toLocaleDateString("en", { weekday: "short" });
+      const doneCount = todos.filter((t) => t.done && t.due === str).length;
+      const totalCount = todos.filter((t) => t.due === str).length;
+      days.push({ str, dayName, doneCount, totalCount });
+    }
+    return days;
+  };
+
+  const last7 = getLast7Days();
+  const maxCount = Math.max(...last7.map((d) => d.totalCount), 1);
+
+  // Overall stats
+  const totalDone = todos.filter((t) => t.done).length;
+  const totalTasks = todos.length;
+  const withAlarm = todos.filter((t) => t.alarm).length;
+  const overdue = todos.filter(
+    (t) => !t.done && t.due && t.due < todayStr(),
+  ).length;
+
+  const catColors = { Personal: "#ec4899", Study: "#6366f1", Work: "#38bdf8" };
+  const priColors = { High: "#f43f5e", Medium: "#f59e0b", Low: "#10b981" };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      {/* KPI row */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+        {[
+          {
+            label: "Completion Rate",
+            value: totalTasks
+              ? `${Math.round((totalDone / totalTasks) * 100)}%`
+              : "0%",
+            sub: `${totalDone} of ${totalTasks} done`,
+            color: "#6366f1",
+            emoji: "📊",
+          },
+          {
+            label: "Tasks with Alarm",
+            value: withAlarm,
+            sub: "voice reminders set",
+            color: "#a855f7",
+            emoji: "🔔",
+          },
+          {
+            label: "Overdue Tasks",
+            value: overdue,
+            sub: overdue === 0 ? "all caught up! 🎉" : "need attention",
+            color: overdue > 0 ? "#f43f5e" : "#10b981",
+            emoji: "⚠️",
+          },
+          {
+            label: "Total Tasks",
+            value: totalTasks,
+            sub: `${totalTasks - totalDone} remaining`,
+            color: "#f59e0b",
+            emoji: "📋",
+          },
+        ].map(({ label, value, sub, color, emoji }) => (
+          <div
+            key={label}
+            style={{
+              background: T.card,
+              backdropFilter: "blur(20px)",
+              borderRadius: 20,
+              border: `1px solid ${color}22`,
+              padding: 18,
+              boxShadow: T.shadow,
+            }}
+          >
+            <div style={{ fontSize: 24, marginBottom: 8 }}>{emoji}</div>
+            <div
+              style={{
+                fontSize: 28,
+                fontWeight: 900,
+                color,
+                lineHeight: 1,
+                marginBottom: 4,
+              }}
+            >
+              {value}
+            </div>
+            <div
+              style={{
+                fontSize: 12,
+                fontWeight: 700,
+                color: T.text,
+                marginBottom: 2,
+              }}
+            >
+              {label}
+            </div>
+            <div style={{ fontSize: 11, color: T.muted }}>{sub}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Weekly activity chart */}
+      <div
+        style={{
+          background: T.card,
+          backdropFilter: "blur(20px)",
+          borderRadius: 24,
+          border: `1px solid ${T.bord}`,
+          padding: 22,
+          boxShadow: T.shadow,
+        }}
+      >
+        <div
+          style={{
+            fontSize: 14,
+            fontWeight: 800,
+            color: T.text,
+            marginBottom: 16,
+          }}
+        >
+          📅 Weekly Activity (by due date)
+        </div>
+        <div
+          style={{
+            display: "flex",
+            gap: 8,
+            alignItems: "flex-end",
+            height: 100,
+          }}
+        >
+          {last7.map(({ dayName, doneCount, totalCount }) => {
+            const barH =
+              totalCount > 0 ? Math.max((totalCount / maxCount) * 80, 8) : 4;
+            const doneH = totalCount > 0 ? (doneCount / totalCount) * barH : 0;
+            return (
+              <div
+                key={dayName}
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 4,
+                }}
+              >
+                <div
+                  style={{
+                    width: "100%",
+                    height: 80,
+                    display: "flex",
+                    alignItems: "flex-end",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      position: "relative",
+                      height: barH,
+                      borderRadius: 6,
+                      background: dark ? "rgba(99,102,241,0.2)" : "#e0e7ff",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: "absolute",
+                        bottom: 0,
+                        width: "100%",
+                        height: doneH,
+                        background: "linear-gradient(180deg,#6366f1,#a855f7)",
+                        borderRadius: 6,
+                        transition: "height 0.5s ease",
+                      }}
+                    />
+                  </div>
+                </div>
+                <div style={{ fontSize: 10, fontWeight: 700, color: T.muted }}>
+                  {dayName}
+                </div>
+                <div
+                  style={{ fontSize: 10, fontWeight: 700, color: "#6366f1" }}
+                >
+                  {doneCount}/{totalCount}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div style={{ display: "flex", gap: 12, marginTop: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div
+              style={{
+                width: 12,
+                height: 12,
+                borderRadius: 3,
+                background: "linear-gradient(135deg,#6366f1,#a855f7)",
+              }}
+            />
+            <span style={{ fontSize: 11, color: T.muted, fontWeight: 600 }}>
+              Completed
+            </span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div
+              style={{
+                width: 12,
+                height: 12,
+                borderRadius: 3,
+                background: dark ? "rgba(99,102,241,0.2)" : "#e0e7ff",
+              }}
+            />
+            <span style={{ fontSize: 11, color: T.muted, fontWeight: 600 }}>
+              Total
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Category breakdown */}
+      <div
+        style={{
+          background: T.card,
+          backdropFilter: "blur(20px)",
+          borderRadius: 24,
+          border: `1px solid ${T.bord}`,
+          padding: 22,
+          boxShadow: T.shadow,
+        }}
+      >
+        <div
+          style={{
+            fontSize: 14,
+            fontWeight: 800,
+            color: T.text,
+            marginBottom: 16,
+          }}
+        >
+          📁 Category Breakdown
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          {catData.map(({ cat, total, done, pct }) => (
+            <div key={cat}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: 6,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 16 }}>{CAT_META[cat]?.icon}</span>
+                  <span
+                    style={{ fontSize: 13, fontWeight: 700, color: T.text }}
+                  >
+                    {cat}
+                  </span>
+                  <span style={{ fontSize: 11, color: T.muted }}>
+                    ({done}/{total})
+                  </span>
+                </div>
+                <span
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 900,
+                    color: catColors[cat],
+                  }}
+                >
+                  {pct}%
+                </span>
+              </div>
+              <div
+                style={{
+                  height: 8,
+                  background: dark ? "rgba(255,255,255,0.06)" : "#e0e7ff",
+                  borderRadius: 99,
+                  overflow: "hidden",
+                }}
+              >
+                <div
+                  style={{
+                    height: "100%",
+                    width: `${pct}%`,
+                    background: catColors[cat],
+                    borderRadius: 99,
+                    transition: "width 0.5s ease",
+                    boxShadow: `0 2px 6px ${catColors[cat]}44`,
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Priority breakdown */}
+      <div
+        style={{
+          background: T.card,
+          backdropFilter: "blur(20px)",
+          borderRadius: 24,
+          border: `1px solid ${T.bord}`,
+          padding: 22,
+          boxShadow: T.shadow,
+        }}
+      >
+        <div
+          style={{
+            fontSize: 14,
+            fontWeight: 800,
+            color: T.text,
+            marginBottom: 16,
+          }}
+        >
+          ⚡ Priority Distribution
+        </div>
+        <div style={{ display: "flex", gap: 10 }}>
+          {priData.map(({ pri, total, done }) => {
+            const pct = total ? Math.round((done / total) * 100) : 0;
+            return (
+              <div
+                key={pri}
+                style={{
+                  flex: 1,
+                  background: dark ? "rgba(255,255,255,0.04)" : "#fafafa",
+                  borderRadius: 16,
+                  padding: "14px 10px",
+                  textAlign: "center",
+                  border: `1.5px solid ${priColors[pri]}33`,
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 800,
+                    color: priColors[pri],
+                    marginBottom: 6,
+                  }}
+                >
+                  {PRI_META[pri].label}
+                </div>
+                <div
+                  style={{
+                    fontSize: 26,
+                    fontWeight: 900,
+                    color: priColors[pri],
+                    lineHeight: 1,
+                  }}
+                >
+                  {total}
+                </div>
+                <div
+                  style={{
+                    fontSize: 10,
+                    color: T.muted,
+                    marginBottom: 8,
+                    fontWeight: 600,
+                  }}
+                >
+                  tasks
+                </div>
+                <div
+                  style={{
+                    height: 6,
+                    background: dark ? "rgba(255,255,255,0.06)" : "#e0e7ff",
+                    borderRadius: 99,
+                    overflow: "hidden",
+                  }}
+                >
+                  <div
+                    style={{
+                      height: "100%",
+                      width: `${pct}%`,
+                      background: priColors[pri],
+                      borderRadius: 99,
+                    }}
+                  />
+                </div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    color: T.muted,
+                    marginTop: 4,
+                    fontWeight: 600,
+                  }}
+                >
+                  {pct}% done
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ★ NEW: WEEKLY REVIEW
+// ─────────────────────────────────────────────────────────────────────────────
+function WeeklyReview({ todos, dark }) {
+  const T = {
+    card: dark ? "rgba(255,255,255,0.045)" : "rgba(255,255,255,0.9)",
+    glass: dark ? "rgba(255,255,255,0.06)" : "rgba(255,255,255,0.75)",
+    text: dark ? "#ede9fe" : "#1e1b4b",
+    muted: dark ? "#9ca3af" : "#6b7280",
+    bord: dark ? "rgba(139,92,246,0.15)" : "rgba(99,102,241,0.15)",
+    shadow: dark
+      ? "0 12px 40px rgba(0,0,0,0.5)"
+      : "0 12px 40px rgba(99,102,241,0.12)",
+  };
+
+  const getWeekDates = () => {
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      days.push(d.toISOString().split("T")[0]);
+    }
+    return days;
+  };
+
+  const weekDates = getWeekDates();
+  const weekStart = weekDates[0];
+  const weekEnd = weekDates[6];
+
+  const completedThisWeek = todos.filter(
+    (t) => t.done && t.due && t.due >= weekStart && t.due <= weekEnd,
+  );
+  const missedThisWeek = todos.filter(
+    (t) => !t.done && t.due && t.due >= weekStart && t.due < todayStr(),
+  );
+  const dueThisWeek = todos.filter(
+    (t) => t.due && t.due >= weekStart && t.due <= weekEnd,
+  );
+  const completionRate = dueThisWeek.length
+    ? Math.round((completedThisWeek.length / dueThisWeek.length) * 100)
+    : 0;
+
+  const getMood = () => {
+    if (completionRate >= 80)
+      return { emoji: "🌟", label: "Excellent week!", color: "#10b981" };
+    if (completionRate >= 60)
+      return { emoji: "😊", label: "Good progress!", color: "#6366f1" };
+    if (completionRate >= 40)
+      return { emoji: "💪", label: "Keep pushing!", color: "#f59e0b" };
+    return { emoji: "🌱", label: "Room to grow!", color: "#f43f5e" };
+  };
+
+  const mood = getMood();
+
+  const catBreakdown = ["Personal", "Study", "Work"]
+    .map((cat) => ({
+      cat,
+      done: completedThisWeek.filter((t) => t.category === cat).length,
+      missed: missedThisWeek.filter((t) => t.category === cat).length,
+    }))
+    .filter((c) => c.done > 0 || c.missed > 0);
+
+  const getInsights = () => {
+    const insights = [];
+    if (completedThisWeek.length === 0)
+      insights.push({
+        icon: "💡",
+        text: "No tasks completed with due dates this week. Try setting due dates to track better!",
+        color: "#6366f1",
+      });
+    if (missedThisWeek.length > 0)
+      insights.push({
+        icon: "⚠️",
+        text: `${missedThisWeek.length} task${missedThisWeek.length > 1 ? "s" : ""} missed their deadline. Consider breaking them into smaller steps.`,
+        color: "#f43f5e",
+      });
+    if (completionRate >= 80)
+      insights.push({
+        icon: "🏆",
+        text: "Outstanding! You completed 80%+ of your weekly tasks. Keep up the momentum!",
+        color: "#10b981",
+      });
+    const highPriDone = completedThisWeek.filter(
+      (t) => t.priority === "High",
+    ).length;
+    if (highPriDone > 0)
+      insights.push({
+        icon: "🎯",
+        text: `Crushed ${highPriDone} high-priority task${highPriDone > 1 ? "s" : ""}! Great focus on what matters.`,
+        color: "#6366f1",
+      });
+    if (insights.length === 0)
+      insights.push({
+        icon: "📝",
+        text: "Set due dates on your tasks to unlock detailed weekly insights!",
+        color: T.muted,
+      });
+    return insights;
+  };
+
+  const insights = getInsights();
+
+  const formatDate = (str) => {
+    const d = new Date(str + "T00:00:00");
+    return d.toLocaleDateString("en", { month: "short", day: "numeric" });
+  };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      {/* Week header */}
+      <div
+        style={{
+          background: T.card,
+          backdropFilter: "blur(20px)",
+          borderRadius: 28,
+          border: `1.5px solid ${mood.color}33`,
+          padding: 24,
+          textAlign: "center",
+          boxShadow: T.shadow,
+        }}
+      >
+        <div style={{ fontSize: 52, marginBottom: 10 }}>{mood.emoji}</div>
+        <div
+          style={{
+            fontSize: 22,
+            fontWeight: 900,
+            color: mood.color,
+            marginBottom: 4,
+          }}
+        >
+          {mood.label}
+        </div>
+        <div style={{ fontSize: 13, color: T.muted, marginBottom: 16 }}>
+          Week of {formatDate(weekStart)} – {formatDate(weekEnd)}
+        </div>
+        <div
+          style={{
+            fontSize: 48,
+            fontWeight: 900,
+            color: T.text,
+            lineHeight: 1,
+            marginBottom: 4,
+          }}
+        >
+          {completionRate}%
+        </div>
+        <div style={{ fontSize: 13, color: T.muted, fontWeight: 600 }}>
+          completion rate
+        </div>
+        <div
+          style={{
+            marginTop: 16,
+            height: 12,
+            background: dark ? "rgba(255,255,255,0.08)" : "#e0e7ff",
+            borderRadius: 99,
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              height: "100%",
+              width: `${completionRate}%`,
+              background: `linear-gradient(90deg,${mood.color},#a855f7)`,
+              borderRadius: 99,
+              transition: "width 1s ease",
+              boxShadow: `0 2px 8px ${mood.color}44`,
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Stats grid */}
+      <div
+        style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}
+      >
+        {[
+          { n: dueThisWeek.length, l: "Due This Week", c: "#6366f1", e: "📅" },
+          {
+            n: completedThisWeek.length,
+            l: "Completed",
+            c: "#10b981",
+            e: "✅",
+          },
+          {
+            n: missedThisWeek.length,
+            l: "Missed",
+            c: missedThisWeek.length > 0 ? "#f43f5e" : "#10b981",
+            e: missedThisWeek.length > 0 ? "❌" : "🎉",
+          },
+        ].map(({ n, l, c, e }) => (
+          <div
+            key={l}
+            style={{
+              background: T.card,
+              backdropFilter: "blur(20px)",
+              borderRadius: 18,
+              padding: "16px 10px",
+              textAlign: "center",
+              border: `1px solid ${c}22`,
+              boxShadow: T.shadow,
+            }}
+          >
+            <div style={{ fontSize: 20, marginBottom: 6 }}>{e}</div>
+            <div
+              style={{ fontSize: 26, fontWeight: 900, color: c, lineHeight: 1 }}
+            >
+              {n}
+            </div>
+            <div
+              style={{
+                fontSize: 10,
+                color: T.muted,
+                marginTop: 4,
+                fontWeight: 600,
+                textTransform: "uppercase",
+                letterSpacing: 0.5,
+              }}
+            >
+              {l}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Daily breakdown */}
+      <div
+        style={{
+          background: T.card,
+          backdropFilter: "blur(20px)",
+          borderRadius: 24,
+          border: `1px solid ${T.bord}`,
+          padding: 22,
+          boxShadow: T.shadow,
+        }}
+      >
+        <div
+          style={{
+            fontSize: 14,
+            fontWeight: 800,
+            color: T.text,
+            marginBottom: 16,
+          }}
+        >
+          📆 Day-by-Day
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {weekDates.map((day) => {
+            const dayTodos = todos.filter((t) => t.due === day);
+            const doneTodos = dayTodos.filter((t) => t.done);
+            const isToday = day === todayStr();
+            const isPast = day < todayStr();
+            const dayLabel = new Date(day + "T00:00:00").toLocaleDateString(
+              "en",
+              { weekday: "short", month: "short", day: "numeric" },
+            );
+            return (
+              <div
+                key={day}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  padding: "10px 14px",
+                  borderRadius: 14,
+                  background: isToday
+                    ? dark
+                      ? "rgba(99,102,241,0.12)"
+                      : "#eef2ff"
+                    : "transparent",
+                  border: isToday
+                    ? `1.5px solid #6366f1`
+                    : `1px solid ${T.bord}`,
+                }}
+              >
+                <div
+                  style={{
+                    width: 70,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: isToday ? "#6366f1" : T.muted,
+                    flexShrink: 0,
+                  }}
+                >
+                  {dayLabel}
+                </div>
+                {dayTodos.length === 0 ? (
+                  <span style={{ fontSize: 12, color: T.muted }}>
+                    No tasks due
+                  </span>
+                ) : (
+                  <div
+                    style={{
+                      flex: 1,
+                      display: "flex",
+                      gap: 4,
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    {doneTodos.map((t) => (
+                      <span
+                        key={t.id}
+                        style={{
+                          fontSize: 11,
+                          padding: "3px 8px",
+                          borderRadius: 8,
+                          background: dark
+                            ? "rgba(16,185,129,0.15)"
+                            : "#ecfdf5",
+                          color: "#10b981",
+                          fontWeight: 600,
+                          textDecoration: "line-through",
+                        }}
+                      >
+                        {t.text.slice(0, 20)}
+                        {t.text.length > 20 ? "…" : ""}
+                      </span>
+                    ))}
+                    {dayTodos
+                      .filter((t) => !t.done)
+                      .map((t) => (
+                        <span
+                          key={t.id}
+                          style={{
+                            fontSize: 11,
+                            padding: "3px 8px",
+                            borderRadius: 8,
+                            background: isPast
+                              ? dark
+                                ? "rgba(244,63,94,0.15)"
+                                : "#fff1f2"
+                              : dark
+                                ? "rgba(255,255,255,0.06)"
+                                : "#f5f3ff",
+                            color: isPast ? "#f43f5e" : T.muted,
+                            fontWeight: 600,
+                          }}
+                        >
+                          {t.text.slice(0, 20)}
+                          {t.text.length > 20 ? "…" : ""}
+                        </span>
+                      ))}
+                  </div>
+                )}
+                {dayTodos.length > 0 && (
+                  <div
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 800,
+                      color:
+                        doneTodos.length === dayTodos.length
+                          ? "#10b981"
+                          : T.muted,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {doneTodos.length}/{dayTodos.length}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Category summary */}
+      {catBreakdown.length > 0 && (
+        <div
+          style={{
+            background: T.card,
+            backdropFilter: "blur(20px)",
+            borderRadius: 24,
+            border: `1px solid ${T.bord}`,
+            padding: 22,
+            boxShadow: T.shadow,
+          }}
+        >
+          <div
+            style={{
+              fontSize: 14,
+              fontWeight: 800,
+              color: T.text,
+              marginBottom: 14,
+            }}
+          >
+            📁 Category Summary
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {catBreakdown.map(({ cat, done, missed }) => (
+              <div
+                key={cat}
+                style={{ display: "flex", alignItems: "center", gap: 12 }}
+              >
+                <span style={{ fontSize: 18 }}>{CAT_META[cat]?.icon}</span>
+                <span
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: T.text,
+                    flex: 1,
+                  }}
+                >
+                  {cat}
+                </span>
+                {done > 0 && (
+                  <span
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 700,
+                      color: "#10b981",
+                      background: dark ? "rgba(16,185,129,0.15)" : "#ecfdf5",
+                      padding: "4px 10px",
+                      borderRadius: 99,
+                      border: "1px solid #a7f3d0",
+                    }}
+                  >
+                    ✅ {done} done
+                  </span>
+                )}
+                {missed > 0 && (
+                  <span
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 700,
+                      color: "#f43f5e",
+                      background: dark ? "rgba(244,63,94,0.15)" : "#fff1f2",
+                      padding: "4px 10px",
+                      borderRadius: 99,
+                      border: "1px solid #fecdd3",
+                    }}
+                  >
+                    ❌ {missed} missed
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* AI-style insights */}
+      <div
+        style={{
+          background: T.card,
+          backdropFilter: "blur(20px)",
+          borderRadius: 24,
+          border: `1px solid ${T.bord}`,
+          padding: 22,
+          boxShadow: T.shadow,
+        }}
+      >
+        <div
+          style={{
+            fontSize: 14,
+            fontWeight: 800,
+            color: T.text,
+            marginBottom: 14,
+          }}
+        >
+          💡 Weekly Insights
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          {insights.map((ins, i) => (
+            <div
+              key={i}
+              style={{
+                display: "flex",
+                gap: 12,
+                padding: "12px 14px",
+                borderRadius: 14,
+                background: dark ? "rgba(255,255,255,0.03)" : "#fafafa",
+                border: `1px solid ${T.bord}`,
+              }}
+            >
+              <span style={{ fontSize: 20, flexShrink: 0 }}>{ins.icon}</span>
+              <span
+                style={{
+                  fontSize: 13,
+                  color: T.text,
+                  fontWeight: 500,
+                  lineHeight: 1.5,
+                }}
+              >
+                {ins.text}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Next week prep */}
+      <div
+        style={{
+          background: `linear-gradient(135deg,${dark ? "rgba(99,102,241,0.15)" : "#eef2ff"},${dark ? "rgba(236,72,153,0.1)" : "#fdf2f8"})`,
+          borderRadius: 24,
+          border: `1.5px solid ${dark ? "rgba(99,102,241,0.25)" : "#c7d2fe"}`,
+          padding: 22,
+          boxShadow: T.shadow,
+        }}
+      >
+        <div
+          style={{
+            fontSize: 14,
+            fontWeight: 800,
+            color: T.text,
+            marginBottom: 8,
+          }}
+        >
+          🚀 Looking Ahead
+        </div>
+        <div style={{ fontSize: 13, color: T.muted, lineHeight: 1.7 }}>
+          {todos.filter((t) => !t.done && t.due > weekEnd).length > 0
+            ? `You have ${todos.filter((t) => !t.done && t.due > weekEnd).length} task${todos.filter((t) => !t.done && t.due > weekEnd).length > 1 ? "s" : ""} scheduled for next week. Stay focused and keep the momentum going! 💪`
+            : "No upcoming tasks scheduled yet. Plan your next week to stay ahead of the game! 🗓️"}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STUDY TRACKER
 // ─────────────────────────────────────────────────────────────────────────────
 function StudyTracker({
   subjects,
@@ -1435,10 +3235,8 @@ function StudyTracker({
       ? "0 12px 40px rgba(0,0,0,0.5)"
       : "0 12px 40px rgba(99,102,241,0.12)",
   };
-
   const uid2 = () =>
     Date.now().toString(36) + Math.random().toString(36).slice(2);
-
   const addSubject = () => {
     const n = subjectName.trim();
     const t = parseInt(subjectTotal);
@@ -1448,20 +3246,19 @@ function StudyTracker({
     setSubjectTotal("");
     setShowAddSubject(false);
   };
-
-  const markTopic = (id, delta) => {
+  const markTopic = (id, delta) =>
     setSubjects((p) =>
-      p.map((s) => {
-        if (s.id !== id) return s;
-        const newVal = Math.min(s.total, Math.max(0, s.completed + delta));
-        return { ...s, completed: newVal };
-      }),
+      p.map((s) =>
+        s.id !== id
+          ? s
+          : {
+              ...s,
+              completed: Math.min(s.total, Math.max(0, s.completed + delta)),
+            },
+      ),
     );
-  };
-
   const deleteSubject = (id) =>
     setSubjects((p) => p.filter((s) => s.id !== id));
-
   const totalTopics = subjects.reduce((a, s) => a + s.total, 0);
   const doneTopics = subjects.reduce((a, s) => a + s.completed, 0);
   const overallPct = totalTopics
@@ -1470,7 +3267,6 @@ function StudyTracker({
 
   return (
     <div>
-      {/* Overall summary */}
       {subjects.length > 0 && (
         <div
           style={{
@@ -1518,50 +3314,47 @@ function StudyTracker({
             />
           </div>
           <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
-            <span
-              style={{
-                fontSize: 13,
-                fontWeight: 700,
-                color: "#10b981",
-                background: dark ? "rgba(16,185,129,0.15)" : "#ecfdf5",
-                padding: "5px 14px",
-                borderRadius: 99,
-                border: "1px solid #a7f3d0",
-              }}
-            >
-              {doneTopics} done
-            </span>
-            <span
-              style={{
-                fontSize: 13,
-                fontWeight: 700,
-                color: "#6366f1",
-                background: dark ? "rgba(99,102,241,0.15)" : "#eef2ff",
-                padding: "5px 14px",
-                borderRadius: 99,
-                border: "1px solid #c7d2fe",
-              }}
-            >
-              {totalTopics} total
-            </span>
-            <span
-              style={{
-                fontSize: 13,
-                fontWeight: 700,
-                color: "#f59e0b",
-                background: dark ? "rgba(245,158,11,0.15)" : "#fefce8",
-                padding: "5px 14px",
-                borderRadius: 99,
-                border: "1px solid #fde68a",
-              }}
-            >
-              {totalTopics - doneTopics} left
-            </span>
+            {[
+              {
+                v: doneTopics,
+                l: "done",
+                c: "#10b981",
+                bg: dark ? "rgba(16,185,129,0.15)" : "#ecfdf5",
+                bord: "#a7f3d0",
+              },
+              {
+                v: totalTopics,
+                l: "total",
+                c: "#6366f1",
+                bg: dark ? "rgba(99,102,241,0.15)" : "#eef2ff",
+                bord: "#c7d2fe",
+              },
+              {
+                v: totalTopics - doneTopics,
+                l: "left",
+                c: "#f59e0b",
+                bg: dark ? "rgba(245,158,11,0.15)" : "#fefce8",
+                bord: "#fde68a",
+              },
+            ].map(({ v, l, c, bg, bord }) => (
+              <span
+                key={l}
+                style={{
+                  fontSize: 13,
+                  fontWeight: 700,
+                  color: c,
+                  background: bg,
+                  padding: "5px 14px",
+                  borderRadius: 99,
+                  border: `1px solid ${bord}`,
+                }}
+              >
+                {v} {l}
+              </span>
+            ))}
           </div>
         </div>
       )}
-
-      {/* Add subject button/form */}
       <div
         style={{
           background: T.card,
@@ -1706,8 +3499,6 @@ function StudyTracker({
           </div>
         )}
       </div>
-
-      {/* Subject list */}
       {subjects.length === 0 && (
         <div
           style={{
@@ -1735,7 +3526,6 @@ function StudyTracker({
           </div>
         </div>
       )}
-
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {subjects.map((s) => {
           const pct = s.total ? Math.round((s.completed / s.total) * 100) : 0;
@@ -1758,7 +3548,6 @@ function StudyTracker({
                 overflow: "hidden",
               }}
             >
-              {/* left accent */}
               <div
                 style={{
                   position: "absolute",
@@ -1772,7 +3561,6 @@ function StudyTracker({
                   borderRadius: "20px 0 0 20px",
                 }}
               />
-
               <div
                 style={{
                   display: "flex",
@@ -1838,8 +3626,6 @@ function StudyTracker({
                   🗑️
                 </button>
               </div>
-
-              {/* Progress bar */}
               <div
                 style={{
                   height: 8,
@@ -1863,8 +3649,6 @@ function StudyTracker({
                   }}
                 />
               </div>
-
-              {/* Controls */}
               <div
                 style={{
                   display: "flex",
@@ -1959,20 +3743,17 @@ function StudyTracker({
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MAIN APP — now auth-aware
+// MAIN APP
 // ─────────────────────────────────────────────────────────────────────────────
 export default function TodoApp() {
-  // ── AUTH STATE ──
   const [currentUser, setCurrentUser] = useState(() => getSession());
   const [showProfile, setShowProfile] = useState(false);
   const [dark, setDark] = useState(
     () => localStorage.getItem("todo-dark") === "true",
   );
 
-  // Per-user localStorage key for todos
   const todosKey = currentUser ? `todo-v6-${currentUser.id}` : "todo-v6";
 
-  // ── TODO STATE ──
   const [todos, setTodos] = useState(() => {
     if (!currentUser) return DEFAULTS;
     try {
@@ -2000,7 +3781,7 @@ export default function TodoApp() {
   const [showAdd, setShowAdd] = useState(false);
   const [ringing, setRinging] = useState([]);
 
-  // ── STUDY TRACKER STATE ──
+  // Study tracker state
   const studyKey = currentUser ? `study-v1-${currentUser.id}` : "study-v1";
   const [subjects, setSubjects] = useState(() => {
     const key = currentUser ? `study-v1-${currentUser.id}` : "study-v1";
@@ -2010,49 +3791,31 @@ export default function TodoApp() {
       return [];
     }
   });
-  const [activeTab, setActiveTab] = useState("tasks"); // "tasks" | "study"
   const [showAddSubject, setShowAddSubject] = useState(false);
   const [subjectName, setSubjectName] = useState("");
   const [subjectTotal, setSubjectTotal] = useState("");
 
-  // Reload subjects when user changes
-  useEffect(() => {
-    if (!currentUser) {
-      setSubjects([]);
-      return;
-    }
+  // ★ NEW: Habit tracker state
+  const habitKey = currentUser ? `habits-v1-${currentUser.id}` : "habits-v1";
+  const [habits, setHabits] = useState(() => {
+    const key = currentUser ? `habits-v1-${currentUser.id}` : "habits-v1";
     try {
-      const saved = JSON.parse(
-        localStorage.getItem(`study-v1-${currentUser.id}`),
-      );
-      setSubjects(saved || []);
+      return JSON.parse(localStorage.getItem(key)) || [];
     } catch {
-      setSubjects([]);
+      return [];
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser?.id]);
+  });
 
+  // Active tab — now includes 4 new tabs
+  const [activeTab, setActiveTab] = useState("tasks");
+
+  // Persist data
+  useEffect(() => {
+    localStorage.setItem(habitKey, JSON.stringify(habits));
+  }, [habits, habitKey]);
   useEffect(() => {
     localStorage.setItem(studyKey, JSON.stringify(subjects));
   }, [subjects, studyKey]);
-
-  // Reload todos when user changes
-  useEffect(() => {
-    if (!currentUser) {
-      setTodos(DEFAULTS);
-      return;
-    }
-    try {
-      const saved = JSON.parse(
-        localStorage.getItem(`todo-v6-${currentUser.id}`),
-      );
-      setTodos(saved || DEFAULTS);
-    } catch {
-      setTodos(DEFAULTS);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser?.id]);
-
   useEffect(() => {
     localStorage.setItem(todosKey, JSON.stringify(todos));
   }, [todos, todosKey]);
@@ -2060,10 +3823,40 @@ export default function TodoApp() {
     localStorage.setItem("todo-dark", String(dark));
   }, [dark]);
 
-  // ── AUTH HANDLERS ──
-  const handleLogin = (user) => {
-    setCurrentUser(user);
-  };
+  // Reload on user change
+  useEffect(() => {
+    if (!currentUser) {
+      setTodos(DEFAULTS);
+      setSubjects([]);
+      setHabits([]);
+      return;
+    }
+    try {
+      setTodos(
+        JSON.parse(localStorage.getItem(`todo-v6-${currentUser.id}`)) ||
+          DEFAULTS,
+      );
+    } catch {
+      setTodos(DEFAULTS);
+    }
+    try {
+      setSubjects(
+        JSON.parse(localStorage.getItem(`study-v1-${currentUser.id}`)) || [],
+      );
+    } catch {
+      setSubjects([]);
+    }
+    try {
+      setHabits(
+        JSON.parse(localStorage.getItem(`habits-v1-${currentUser.id}`)) || [],
+      );
+    } catch {
+      setHabits([]);
+    }
+  }, [currentUser?.id]);
+
+  // Auth handlers
+  const handleLogin = (user) => setCurrentUser(user);
   const handleLogout = () => {
     clearSession();
     setCurrentUser(null);
@@ -2072,7 +3865,7 @@ export default function TodoApp() {
     window.speechSynthesis?.cancel();
   };
 
-  // ── VOICE LOAD ──
+  // Voice load
   useEffect(() => {
     if (window.speechSynthesis) {
       const load = () => {
@@ -2089,7 +3882,7 @@ export default function TodoApp() {
       Notification.requestPermission();
   }, []);
 
-  // ── ALARM CHECKER ──
+  // Alarm checker
   useEffect(() => {
     const check = () => {
       const now = nowTimeStr();
@@ -2175,7 +3968,6 @@ export default function TodoApp() {
     (id) => setTodos((p) => p.filter((t) => t.id !== id)),
     [],
   );
-
   const saveEdit = (id, changes) => {
     setTodos((p) =>
       p.map((t) => (t.id === id ? { ...t, ...changes, alarmFired: false } : t)),
@@ -2236,16 +4028,24 @@ export default function TodoApp() {
       : "0 12px 40px rgba(99,102,241,0.12)",
   };
 
-  // ── SHOW AUTH IF NOT LOGGED IN ──
   if (!currentUser) return <AuthScreen onLogin={handleLogin} dark={dark} />;
 
-  // User initials for avatar button
   const initials = currentUser.name
     .split(" ")
     .map((w) => w[0])
     .join("")
     .toUpperCase()
     .slice(0, 2);
+
+  // Tab config with new tabs
+  const TABS = [
+    { id: "tasks", label: "✅ Tasks" },
+    { id: "pomodoro", label: "🍅 Pomodoro" },
+    { id: "habits", label: "🔥 Habits" },
+    { id: "analytics", label: "📊 Analytics" },
+    { id: "weekly", label: "📋 Weekly" },
+    { id: "study", label: "📚 Study" },
+  ];
 
   return (
     <div
@@ -2399,9 +4199,20 @@ export default function TodoApp() {
                   · {alarmCnt} 🔔
                 </span>
               )}
+              {habits.filter((h) => h.completedDays.includes(todayStr()))
+                .length > 0 && (
+                <span style={{ color: "#f59e0b", fontWeight: 700 }}>
+                  {" "}
+                  ·{" "}
+                  {
+                    habits.filter((h) => h.completedDays.includes(todayStr()))
+                      .length
+                  }{" "}
+                  habits done 🔥
+                </span>
+              )}
             </p>
           </div>
-          {/* Right buttons: dark toggle + avatar */}
           <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
             <button
               onClick={() => setDark((d) => !d)}
@@ -2424,7 +4235,6 @@ export default function TodoApp() {
             </button>
             <button
               onClick={() => setShowProfile(true)}
-              title={currentUser.name}
               style={{
                 width: 46,
                 height: 46,
@@ -2569,50 +4379,69 @@ export default function TodoApp() {
           </div>
         </div>
 
-        {/* TAB SWITCHER */}
-        <div
-          style={{
-            display: "flex",
-            gap: 4,
-            background: dark ? "rgba(255,255,255,0.05)" : "#ede9fe",
-            borderRadius: 16,
-            padding: 4,
-            marginBottom: 16,
-          }}
-        >
-          {[
-            { id: "tasks", label: "✅ Tasks" },
-            { id: "study", label: "📚 Study Tracker" },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              style={{
-                flex: 1,
-                padding: "11px",
-                borderRadius: 12,
-                border: "none",
-                cursor: "pointer",
-                fontSize: 13,
-                fontWeight: 700,
-                transition: "all 0.2s",
-                background:
-                  activeTab === tab.id
-                    ? "linear-gradient(135deg,#6366f1,#ec4899)"
-                    : "transparent",
-                color: activeTab === tab.id ? "#fff" : T.muted,
-                boxShadow:
-                  activeTab === tab.id
-                    ? "0 4px 14px rgba(99,102,241,0.35)"
-                    : "none",
-              }}
-            >
-              {tab.label}
-            </button>
-          ))}
+        {/* TAB SWITCHER — scrollable for 6 tabs */}
+        <div style={{ overflowX: "auto", marginBottom: 16, paddingBottom: 4 }}>
+          <div
+            style={{
+              display: "flex",
+              gap: 6,
+              background: dark ? "rgba(255,255,255,0.05)" : "#ede9fe",
+              borderRadius: 16,
+              padding: 4,
+              minWidth: "max-content",
+            }}
+          >
+            {TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                style={{
+                  padding: "10px 16px",
+                  borderRadius: 12,
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  transition: "all 0.2s",
+                  whiteSpace: "nowrap",
+                  background:
+                    activeTab === tab.id
+                      ? "linear-gradient(135deg,#6366f1,#ec4899)"
+                      : "transparent",
+                  color: activeTab === tab.id ? "#fff" : T.muted,
+                  boxShadow:
+                    activeTab === tab.id
+                      ? "0 4px 14px rgba(99,102,241,0.35)"
+                      : "none",
+                }}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* STUDY TRACKER TAB */}
+        {/* ─── TAB CONTENT ─── */}
+
+        {/* POMODORO TAB */}
+        {activeTab === "pomodoro" && (
+          <PomodoroTimer todos={todos} dark={dark} />
+        )}
+
+        {/* HABITS TAB */}
+        {activeTab === "habits" && (
+          <HabitTracker habits={habits} setHabits={setHabits} dark={dark} />
+        )}
+
+        {/* ANALYTICS TAB */}
+        {activeTab === "analytics" && (
+          <AnalyticsDashboard todos={todos} dark={dark} />
+        )}
+
+        {/* WEEKLY REVIEW TAB */}
+        {activeTab === "weekly" && <WeeklyReview todos={todos} dark={dark} />}
+
+        {/* STUDY TAB */}
         {activeTab === "study" && (
           <StudyTracker
             subjects={subjects}
@@ -2627,6 +4456,7 @@ export default function TodoApp() {
           />
         )}
 
+        {/* TASKS TAB */}
         {activeTab === "tasks" && (
           <>
             {/* SEARCH */}
@@ -2999,7 +4829,6 @@ export default function TodoApp() {
                           label: "Male",
                           color: "#3b82f6",
                           bg: dark ? "rgba(59,130,246,0.15)" : "#eff6ff",
-                          bord: "#bfdbfe",
                         },
                         {
                           val: "female",
@@ -3007,7 +4836,6 @@ export default function TodoApp() {
                           label: "Female",
                           color: "#ec4899",
                           bg: dark ? "rgba(236,72,153,0.15)" : "#fdf2f8",
-                          bord: "#fbcfe8",
                         },
                       ].map((v) => (
                         <button
